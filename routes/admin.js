@@ -96,20 +96,20 @@ router.get('/',validate,roleAdminGuard,async function(req, res, next) {
   }
 });
 
-router.get('/:id',validate,roleAdminGuard,async function(req, res, next) {
-  try{
-    let manager = await managerModel.findOne({_id:req.params.id});
-    res.send({
-      manager,
-      message:'data fetched successfully'
-    });
-  }catch(err){
-    res.send({
-      message:"internal server error",
-      err
-    })
-  }
-});
+// router.get('/:id',validate,roleAdminGuard,async function(req, res, next) {
+//   try{
+//     let manager = await managerModel.findOne({_id:req.params.id});
+//     res.send({
+//       manager,
+//       message:'data fetched successfully'
+//     });
+//   }catch(err){
+//     res.send({
+//       message:"internal server error",
+//       err
+//     })
+//   }
+// });
 
 router.delete('/:id', async (req,res,next)=>{
   try{
@@ -178,7 +178,7 @@ router.put("/:id",async(req,res)=>{
   }
 })
 
-router.get('/employee',roleManagerAdminGuard,async function(req, res, next) {
+router.get('/employee',validate,roleManagerAdminGuard,async function(req, res, next) {
   try{
     let employee = await employeeModel.find();
     res.send({
@@ -186,6 +186,7 @@ router.get('/employee',roleManagerAdminGuard,async function(req, res, next) {
       message:'data fetched successfully'
     });
   }catch(err){
+    console.log(err)
     res.send({
       message:"internal server error",
       err

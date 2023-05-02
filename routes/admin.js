@@ -178,7 +178,7 @@ router.put("/:id",async(req,res)=>{
   }
 })
 
-router.get('/employee',validate,roleManagerAdminGuard,async function(req, res, next) {
+router.get('/employee',roleManagerAdminGuard,async function(req, res, next) {
   try{
     let employee = await employeeModel.find();
     res.send({

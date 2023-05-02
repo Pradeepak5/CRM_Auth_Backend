@@ -96,6 +96,88 @@ router.get('/',validate,roleAdminGuard,async function(req, res, next) {
   }
 });
 
+router.get('/:id',validate,roleAdminGuard,async function(req, res, next) {
+  try{
+    let manager = await managerModel.findOne({_id:req.params.id});
+    res.send({
+      manager,
+      message:'data fetched successfully'
+    });
+  }catch(err){
+    res.send({
+      message:"internal server error",
+      err
+    })
+  }
+});
+
+router.delete('/:id', async (req,res,next)=>{
+  try{
+    let manager = await managerModel.findOne({_id:req.params.id});
+    if(manager){
+      let manager = await managerModel.deleteOne({_id:req.params.id});
+      res.send({
+        message:'Manager deleted successfully'
+      })
+    }else{
+      res.send({
+        message:"Manager does not exixt"
+      })
+    }
+  }catch(err){
+    res.status(500).send({
+      message:'Internal server error',
+      err
+    })
+  }
+})
+
+router.delete('/employee/:id', async (req,res,next)=>{
+  try{
+    let employee = await employeeModel.findOne({_id:req.params.id});
+    if(employee){
+      let employee = await employeeModel.deleteOne({_id:req.params.id});
+      res.send({
+        message:'Employee deleted successfully'
+      })
+    }else{
+      res.send({
+        message:"Employee does not exixt"
+      })
+    }
+  }catch(err){
+    res.status(500).send({
+      message:'Internal server error',
+      err
+    })
+  }
+})
+
+router.put("/:id",async(req,res)=>{
+  try{
+    let manager = await managerModel.findOne({_id:req.params.id});
+    if(manager){
+      let hashedPassword = await hashPassword(req.body.password);
+      manager.password=hashedPassword;
+      await manager.save();
+      res.send({
+        manager,
+        message:"manager updated successfully"
+      })
+    }else{
+      res.send({
+        message:"manager does not exists!"
+      })
+    }
+  }
+  catch(err){
+    res.status(500).send({
+      message:'Internal server error',
+      err
+    })
+  }
+})
+
 router.get('/employee',validate,roleManagerAdminGuard,async function(req, res, next) {
   try{
     let employee = await employeeModel.find();

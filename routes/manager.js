@@ -7,8 +7,19 @@ const {hashPassword,hashCompare,createToken,validate,roleManagerAdminGuard} = re
 const {dbURL} = require('../common/dbConfig');
 mongoose.connect(dbURL);
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a resources');
+router.get('/',validate,async function(req, res, next) {
+  try{
+    let manager = await managerModel.find();
+    res.send({
+      manager,
+      message:'data fetched successfully'
+    });
+  }catch(err){
+    res.send({
+      message:"internal server error",
+      err
+    })
+  }
 });
 
 router.get('/employee',validate,roleManagerAdminGuard,async function(req, res, next) {
